@@ -1,0 +1,66 @@
+CREATE TABLE tbCidade (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(255),
+    UF CHAR(2)
+);
+
+-- Tabela tbFabricante
+CREATE TABLE tbFabricante (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(255),
+    CNPJ VARCHAR(20),
+    fone VARCHAR(15),
+    codigo_cidade INT,
+    FOREIGN KEY (codigo_cidade) REFERENCES tbCidade(codigo)
+);
+
+-- Tabela tbFuncionario
+CREATE TABLE tbFuncionario (
+    matricula INT PRIMARY KEY,
+    RG VARCHAR(20),
+    nome VARCHAR(255),
+    sexo CHAR(1),
+    telefone VARCHAR(15),
+    codigo_loja INT,
+    FOREIGN KEY (codigo_loja) REFERENCES tbLoja(codigo)
+);
+
+-- Tabela tbLoja
+CREATE TABLE tbLoja (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(255),
+    telefone VARCHAR(15),
+    codigo_cidade INT,
+    matricula_funcionario INT,
+    FOREIGN KEY (codigo_cidade) REFERENCES tbCidade(codigo),
+    FOREIGN KEY (matricula_funcionario) REFERENCES tbFuncionario(matricula)
+);
+
+-- Tabela tbProduto
+CREATE TABLE tbProduto (
+    codigo INT PRIMARY KEY,
+    descricao VARCHAR(255),
+    preco_unitario DECIMAL(10, 2),
+    codigo_fabricante INT,
+    FOREIGN KEY (codigo_fabricante) REFERENCES tbFabricante(codigo)
+);
+
+-- Tabela tbVenda
+CREATE TABLE tbVenda (
+    codigo_venda INT PRIMARY KEY,
+    valor_total DECIMAL(10, 2),
+    data_venda DATE,
+    matricula_funcionario INT,
+    FOREIGN KEY (matricula_funcionario) REFERENCES tbFuncionario(matricula)
+);
+
+-- Tabela tbItensVenda
+CREATE TABLE tbItensVenda (
+    codigo_venda INT,
+    codigo_produto INT,
+    data_venda DATE,
+    valor_item DECIMAL(10, 2),
+    quantidade INT,
+    FOREIGN KEY (codigo_venda) REFERENCES tbVenda(codigo_venda),
+    FOREIGN KEY (codigo_produto) REFERENCES tbProduto(codigo)
+);
